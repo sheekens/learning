@@ -124,7 +124,9 @@ def frame_diff(dataset_path, diff_outdir):
         prev_img = cv2.cvtColor(prev_img, cv2.COLOR_BGR2GRAY)
 
         img_diff = cv2.subtract(cur_img, prev_img)
-        img_diff[img_diff!=0] = 255
+
+        img_diff[img_diff>1] = 255
+
         # img_diff = cv2.absdiff(cur_img, prev_img) #nicer, finds people in motion
         # img_diff = cv2.bitwise_xor(cur_img, prev_img)
         
