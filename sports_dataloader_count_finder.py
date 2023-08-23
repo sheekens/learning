@@ -4,11 +4,11 @@ import cv2
 from typing import List, Dict
 from varname.helpers import debug
 
-def img_outdir_save(outdir_path, file_path):
-    os.makedirs(outdir_path, exist_ok=True)
-    img_out_path = os.path.join(outdir, os.path.basename(file_path))
-    cv2.imwrite(img_out_path, file_path)
-    print('out written to', os.path.abspath(img_out_path))
+# def img_outdir_save(outdir_path, file_path):
+#     os.makedirs(outdir_path, exist_ok=True)
+#     img_out_path = os.path.join(outdir, os.path.basename(file_path))
+#     cv2.imwrite(img_out_path, file_path)
+#     print('out written to', os.path.abspath(img_out_path))
 
 def load_gt(dataset_path: str): 
     gt_path = None
@@ -124,6 +124,7 @@ def frame_diff(dataset_path, diff_outdir):
         prev_img = cv2.cvtColor(prev_img, cv2.COLOR_BGR2GRAY)
 
         img_diff = cv2.subtract(cur_img, prev_img)
+        img_diff[img_diff!=0] = 255
         # img_diff = cv2.absdiff(cur_img, prev_img) #nicer, finds people in motion
         # img_diff = cv2.bitwise_xor(cur_img, prev_img)
         
@@ -197,5 +198,5 @@ if __name__ == '__main__' :
     diff_outdir = 'datasets/diff_sportsMOT_volley_starter_pack'
     dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset' 
     # run_dataset(dataset_path, outdir)
-    # frame_diff(dataset_path, diff_outdir)
+    frame_diff(dataset_path, diff_outdir)
     mix_diff_images(dataset_path, diff_outdir, mix_diff_images_outdir_path)
