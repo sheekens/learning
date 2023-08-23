@@ -2,6 +2,13 @@ import os
 import numpy as np 
 import cv2
 from typing import List, Dict
+from varname.helpers import debug
+
+def img_outdir_save(outdir_path, file_path):
+    os.makedirs(outdir_path, exist_ok=True)
+    img_out_path = os.path.join(outdir, os.path.basename(file_path))
+    cv2.imwrite(img_out_path, file_path)
+    print('out written to', os.path.abspath(img_out_path))
 
 def load_gt(dataset_path: str): 
     gt_path = None
@@ -116,17 +123,18 @@ def frame_diff(dataset_path, diff_outdir):
         cur_img = cv2.cvtColor(cur_img, cv2.COLOR_BGR2GRAY)
         prev_img = cv2.cvtColor(prev_img, cv2.COLOR_BGR2GRAY)
 
-        # img_diff = cv2.subtract(cur_img, prev_img)
+        img_diff = cv2.subtract(cur_img, prev_img)
         # img_diff = cv2.absdiff(cur_img, prev_img) #nicer, finds people in motion
         # img_diff = cv2.bitwise_xor(cur_img, prev_img)
         
         # img_diff = 1 / (img_diff)
 
-        img_diff = prev_img / cur_img #nice
+        # img_diff = prev_img - cur_img #nice
         # img_diff = 1/((cur_img) / (0.5*prev_img))  #nicest
 
         # img_diff[img_diff==(0,0,0)] = (255,255,255)
 
+        
         ########## output save
         os.makedirs(diff_outdir, exist_ok=True)
         diff_out_path = os.path.join(diff_outdir, os.path.basename(img_path))
@@ -136,13 +144,44 @@ def frame_diff(dataset_path, diff_outdir):
         # cv2.imshow('jeezus', img_diff)
         # cv2.waitKey(-1)
     
+    return img_diff
+
+def load_diff_paths(dataset_path, diff_outdir):
+    diff_paths = {}
     for root, dirs, files in os.walk(diff_outdir):
         for file_name in files:
             if '.jpg' in file_name and len(file_name) == 10: 
-                # frame_number = int(file_name[:-4])
-                # img_paths[frame_number] = os.path.join(root, file_name)
-                
-    return img_diff
+                diff_number = int(file_name[:-4])
+                diff_paths[diff_number] = os.path.join(root, file_name)
+    return diff_paths
+
+def mix_diff_images(dataset_path, diff_outdir, outdir_path):
+    diff_paths = load_diff_paths(dataset_path, diff_outdir)
+    mix_diff = 0
+    for diff_number in diff_paths.keys():
+        try: 
+            cur_diff_path = diff_paths[diff_number]
+        except KeyError:
+            continue
+        # try: 
+        #     prev_diff_path = diff_paths[diff_number-1]
+        # except KeyError:
+        #     continue
+        cur_diff = cv2.imread(cur_diff_path)
+        # prev_diff = cv2.imread(prev_diff_path)
+        # mix_diff = cur_diff - prev_diff
+        mix_diff = mix_diff + cur_diff
+        # img_outdir_save(outdir_path=outdir_path, file_path=cur_diff_path)
+       
+        ########## output save
+        os.makedirs(mix_diff_images_outdir_path, exist_ok=True)
+        mix_diff_out_path = os.path.join(mix_diff_images_outdir_path, os.path.basename(cur_diff_path))
+        cv2.imwrite(mix_diff_out_path, mix_diff)
+        print('out written to', os.path.abspath(mix_diff_out_path))
+
+        # cv2.imshow('jeezus', mix_diff)
+        # cv2.waitKey(-1)
+    return mix_diff
 
 def xywh2x1y1x2y2(xywh_bbox: tuple):
     return (
@@ -154,7 +193,9 @@ def xywh2x1y1x2y2(xywh_bbox: tuple):
 
 if __name__ == '__main__' :
     outdir = 'datasets/output_sportsMOT_volley_starter_pack'
+    mix_diff_images_outdir_path = 'datasets/mix_diff_img'
     diff_outdir = 'datasets/diff_sportsMOT_volley_starter_pack'
     dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset' 
-    # run_dataset('datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset', outdir)
-    frame_diff(dataset_path, diff_outdir)
+    # run_dataset(dataset_path, outdir)
+    # frame_diff(dataset_path, diff_outdir)
+    mix_diff_images(dataset_path, diff_outdir, mix_diff_images_outdir_path)
