@@ -118,11 +118,17 @@ def frame_diff(dataset_path, diff_outdir):
             prev_img_path = img_paths[frame_number-1]
         except KeyError:
             continue
-        cur_img = cv2.imread(img_path)
-        prev_img = cv2.imread(prev_img_path)
-        cur_img = cv2.cvtColor(cur_img, cv2.COLOR_BGR2GRAY)
-        prev_img = cv2.cvtColor(prev_img, cv2.COLOR_BGR2GRAY)
+        
+        cur_img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+        prev_img = cv2.imread(prev_img_path, cv2.IMREAD_GRAYSCALE)
 
+        # cur_blur = cv2.GaussianBlur(cur_img,(5,5),0)
+        # prev_blur = cv2.GaussianBlur(cur_img,(5,5),0)
+        # ret1,cur_img = cv2.threshold(cur_blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        # ret2,prev_img = cv2.threshold(prev_blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+        # img_diff = cv2.subtract(cur_img, prev_img)
+        
         img_diff = cv2.subtract(cur_img, prev_img)
 
         img_diff[img_diff>1] = 255
