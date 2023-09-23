@@ -109,51 +109,40 @@ def run_dataset(dataset_path:str , outdir: str):
 def frame_diff(dataset_path, diff_outdir):
     img_paths = load_img_paths(dataset_path)
     gt_objects = load_gt(dataset_path)
-    # img_diff = cv2.imread(img_paths[1], cv2.IMREAD_GRAYSCALE)
-    img_diff = 0
     for frame_number in gt_objects.keys():
         try: 
             img_path = img_paths[frame_number]
         except KeyError:
-            # print('fffff')
             continue
         try: 
             prev_img_path = img_paths[frame_number-1]
         except KeyError:
-            # print('aoaoao')
-            # debug(frame_number)
-            # img_diff = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
             continue
         
         cur_img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
         prev_img = cv2.imread(prev_img_path, cv2.IMREAD_GRAYSCALE)
 
-
         # cur_img = cv2.GaussianBlur(cur_img,(5,5),0)
         # prev_img = cv2.GaussianBlur(cur_img,(5,5),0)
+        # cur_img = cv2.GaussianBlur(cur_img,(33,33),0)
+        # prev_img = cv2.GaussianBlur(cur_img,(33,33),0)
         # ret1,cur_img = cv2.threshold(cur_img,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
         # ret2,prev_img = cv2.threshold(prev_img,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
-                
-        # img_temp = cv2.subtract(cur_img, prev_img)
-        # img_temp = cv2.absdiff(cur_img, prev_img) #nicer, finds people in motion
-        img_temp = cv2.bitwise_xor(cur_img, prev_img)
+        # img_diff = cv2.subtract(cur_img, prev_img)
+        
+            # img_diff = cv2.subtract(cur_img, prev_img)
 
-        # img_temp = cur_img - prev_img
-        img_diff += img_temp
         # img_diff[img_diff>1] = 255
 
-        # img_diff = img_diff - cur_img
-
-
-        # img_diff = prev_img - cur_img #nice
-
-
+        # img_diff = cv2.absdiff(cur_img, prev_img) #nicer, finds people in motion
+        # img_diff = cv2.bitwise_xor(cur_img, prev_img)
         
         # img_diff = 1 / (img_diff)
 
-        # img_diff = prev_img - cur_img #nice
+        img_diff = prev_img - cur_img #nice
         # img_diff = 1/((cur_img) / (0.5*prev_img))  #nicest
+        img_diff[img_diff>1] = 255
 
         # img_diff[img_diff==(0,0,0)] = (255,255,255)
 
@@ -162,7 +151,7 @@ def frame_diff(dataset_path, diff_outdir):
         os.makedirs(diff_outdir, exist_ok=True)
         diff_out_path = os.path.join(diff_outdir, os.path.basename(img_path))
         cv2.imwrite(diff_out_path, img_diff)
-        print('diff out written to', os.path.abspath(diff_out_path))
+        print('out written to', os.path.abspath(diff_out_path))
 
         # cv2.imshow('jeezus', img_diff)
         # cv2.waitKey(-1)
@@ -191,6 +180,7 @@ def mix_diff_images(dataset_path, diff_outdir, outdir_path):
         # except KeyError:
         #     continue
         cur_diff = cv2.imread(cur_diff_path)
+        # cur_diff = cv2.GaussianBlur(cur_diff,(1,1),0)
         # prev_diff = cv2.imread(prev_diff_path)
         # mix_diff = cur_diff - prev_diff
         mix_diff = mix_diff + cur_diff
@@ -200,7 +190,7 @@ def mix_diff_images(dataset_path, diff_outdir, outdir_path):
         os.makedirs(mix_diff_images_outdir_path, exist_ok=True)
         mix_diff_out_path = os.path.join(mix_diff_images_outdir_path, os.path.basename(cur_diff_path))
         cv2.imwrite(mix_diff_out_path, mix_diff)
-        print('mix diff out written to', os.path.abspath(mix_diff_out_path))
+        print('out written to', os.path.abspath(mix_diff_out_path))
 
         # cv2.imshow('jeezus', mix_diff)
         # cv2.waitKey(-1)
@@ -221,4 +211,4 @@ if __name__ == '__main__' :
     dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset' 
     # run_dataset(dataset_path, outdir)
     frame_diff(dataset_path, diff_outdir)
-    # mix_diff_images(dataset_path, diff_outdir, mix_diff_images_outdir_path)
+    mix_diff_images(dataset_path, diff_outdir, mix_diff_images_outdir_path)

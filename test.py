@@ -1,3 +1,18 @@
+import os
+import cv2
+from varname.helpers import debug
+
+img1 = cv2.imread('datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset/img1/000001.jpg', cv2.IMREAD_GRAYSCALE)
+img2 = cv2.imread('datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset/img1/000002.jpg', cv2.IMREAD_GRAYSCALE)
+
+result = img2 - img1
+result = cv2.absdiff(img2, img1)
+cv2.imshow('jeezus', result)
+cv2.waitKey(-1)
+
+
+
+exit()
 print()
 input_1 = input('gfug')
 input_2 = 'da7.9sdfg,86de'
@@ -12,7 +27,6 @@ for i in range(len(numbers)):
     print(numbers[i])
     print(i)
     print()
-exit()
 is_input_1_correct = True
 is_input_2_correct = True
 input_1_float = ''
