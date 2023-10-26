@@ -9,20 +9,39 @@ keyboard_classes_mapping = {
     109: 'static'
     }
 
-def markup(dataset_path, outpath):
+def load_classes_form_txt(txt_outpath): 
+    img_classes_txt= None
+    img_classes = {}
+    with open(txt_outpath, 'r') as f:
+        img_classes_txt = f.readlines()
+    for img_object in img_classes_txt: 
+        img_object = img_object.replace('\n', '').split(',')
+        for i in range(len(img_object)):
+            img_object[i] = img_object[i]
+        cur_img_id, img_class = img_object
+        cur_img_id = int(cur_img_id)
+        if cur_img_id not in img_classes.keys(): 
+            img_classes[cur_img_id] = {}
+        img_classes[cur_img_id] = img_class
+    return img_classes
+
+def markup(dataset_path, txt_outpath, load_previous_markup, write_classes_to_txt):
     programm_finish = False
     img_paths = load_img_paths(dataset_path)
-    img_classes = dict.fromkeys(img_paths.keys(), None)
+    if load_previous_markup == False:
+        img_classes = dict.fromkeys(img_paths.keys(), None)
+    else:
+        img_classes = load_classes_form_txt(txt_outpath)
     cur_img_id = min(img_paths.keys())
     while programm_finish == False:
         cur_img_path = img_paths[cur_img_id]
         cur_img = cv2.imread(cur_img_path)
         cur_img = cv2.putText(
             cur_img,
-            str(img_classes[cur_img_id]),
-            (20, 20),
+            str('frame {} class {}'.format(cur_img_id, img_classes[cur_img_id])),
+            (10, 25),
             1,
-            2,
+            1.7,
             (200, 100, 240),
             2
         )
@@ -44,14 +63,19 @@ def markup(dataset_path, outpath):
                 cur_img_id = min(img_paths.keys())
             if cur_img_id < min(img_paths.keys()):
                 cur_img_id = max(img_paths.keys())
-        
-    # for frame, path in img_paths.items():
-        # cur_class = img_classes[frame]
-        # print(img_classes)
+    if write_classes_to_txt == True:
+        save_to_txt(img_classes, txt_outpath)
+    return img_classes
 
-    # return img_paths
+def save_to_txt(img_classes, txt_outpath):
+    dict_to_txt = open(txt_outpath, 'w')
+    for k, v in img_classes.items():
+        dict_to_txt.write(str(k) + ','+ str(v) + '\n')
+    dict_to_txt.close()
 
-
-cur_path = 'learning/datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset/img1/000075.jpg'
 dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
-markup(dataset_path, None)
+txt_outpath = 'classificator.txt'
+
+load_previous_markup = True
+write_classes_to_txt = True
+img_classes = markup(dataset_path, txt_outpath, load_previous_markup, write_classes_to_txt)
