@@ -1,13 +1,13 @@
 1,static
 2,static
-3,None
-4,static
+3,moving
+4,moving
 5,static
-6,None
-7,static
-8,static
+6,static
+7,None
+8,None
 9,None
-10,static
+10,None
 11,None
 12,None
 13,None
@@ -73,3 +73,4 @@
 73,None
 74,None
 75,None
+76,None

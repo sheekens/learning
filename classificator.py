@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 from varname.helpers import debug
 from sports_dataloader_count_finder import load_img_paths
+from operator import countOf
 
 keyboard_classes_mapping = {
     110: 'moving',
@@ -25,13 +26,18 @@ def load_classes_form_txt(txt_outpath):
         img_classes[cur_img_id] = img_class
     return img_classes
 
-def markup(dataset_path, txt_outpath, load_previous_markup, write_classes_to_txt):
+def markup(dataset_path, txt_outpath):
     programm_finish = False
     img_paths = load_img_paths(dataset_path)
-    if load_previous_markup == False:
-        img_classes = dict.fromkeys(img_paths.keys(), None)
-    else:
+    if os.path.exists(txt_outpath):
         img_classes = load_classes_form_txt(txt_outpath)
+        if not img_paths.keys() == img_classes.keys():
+            for key in img_paths.keys():
+                if not key in img_classes:
+                    img_classes[key] = 'None'
+            print(img_classes)
+    else:
+        img_classes = dict.fromkeys(img_paths.keys(), None)
     cur_img_id = min(img_paths.keys())
     while programm_finish == False:
         cur_img_path = img_paths[cur_img_id]
@@ -40,6 +46,15 @@ def markup(dataset_path, txt_outpath, load_previous_markup, write_classes_to_txt
             cur_img,
             str('frame {} class {}'.format(cur_img_id, img_classes[cur_img_id])),
             (10, 25),
+            1,
+            1.7,
+            (200, 100, 240),
+            2
+        )
+        cur_img = cv2.putText(
+            cur_img,
+            str('marked {} of {}'.format((len(img_classes) - countOf(img_classes.values(), 'None')), len(img_classes))),
+            (10, 50),
             1,
             1.7,
             (200, 100, 240),
@@ -58,13 +73,12 @@ def markup(dataset_path, txt_outpath, load_previous_markup, write_classes_to_txt
         if pressed_key == 109: #m na angl raskladke
             img_classes[cur_img_id] = keyboard_classes_mapping[109]
         print(pressed_key)
+        save_to_txt(img_classes, txt_outpath)
         if cur_img_id not in img_paths.keys():
             if cur_img_id > max(img_paths.keys()):
                 cur_img_id = min(img_paths.keys())
             if cur_img_id < min(img_paths.keys()):
                 cur_img_id = max(img_paths.keys())
-    if write_classes_to_txt == True:
-        save_to_txt(img_classes, txt_outpath)
     return img_classes
 
 def save_to_txt(img_classes, txt_outpath):
@@ -78,4 +92,4 @@ txt_outpath = 'classificator.txt'
 
 load_previous_markup = True
 write_classes_to_txt = True
-img_classes = markup(dataset_path, txt_outpath, load_previous_markup, write_classes_to_txt)
+img_classes = markup(dataset_path, txt_outpath)
