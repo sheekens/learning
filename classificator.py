@@ -2,7 +2,6 @@ import os
 import numpy as np
 import cv2
 from varname.helpers import debug
-from sports_dataloader_count_finder import load_img_paths
 from operator import countOf
 
 keyboard_classes_mapping = {
@@ -10,7 +9,17 @@ keyboard_classes_mapping = {
     109: 'static'
     }
 
-def load_classes_form_txt(txt_outpath): 
+def load_img_paths(dataset_path):
+    img_paths = {}
+    for root, dirs, files in os.walk(dataset_path):
+        for file_name in files:
+            if '.jpg' in file_name and len(file_name) == 10: 
+                frame_number = int(file_name[:-4])
+                img_paths[frame_number] = os.path.join(root, file_name)
+    debug(img_paths)
+    return img_paths
+
+def load_classes_from_txt(txt_outpath): 
     img_classes_txt= None
     img_classes = {}
     with open(txt_outpath, 'r') as f:
@@ -26,18 +35,30 @@ def load_classes_form_txt(txt_outpath):
         img_classes[cur_img_id] = img_class
     return img_classes
 
+def actualise_img_classes(dataset_path,txt_outpath):
+    img_paths = load_img_paths(dataset_path)
+    img_classes = load_classes_from_txt(txt_outpath)
+    for k in img_classes.keys():
+        if k not in img_paths.keys():
+            del img_classes[k]
+
 def markup(dataset_path, txt_outpath):
     programm_finish = False
     img_paths = load_img_paths(dataset_path)
     if os.path.exists(txt_outpath):
-        img_classes = load_classes_form_txt(txt_outpath)
+        img_classes = load_classes_from_txt(txt_outpath)
         if not img_paths.keys() == img_classes.keys():
             for key in img_paths.keys():
                 if not key in img_classes:
                     img_classes[key] = 'None'
-            print(img_classes)
+            # print(img_classes)
     else:
         img_classes = dict.fromkeys(img_paths.keys(), None)
+    
+    for k in list(img_classes):
+        if k not in img_paths.keys():
+            del img_classes[k]
+
     cur_img_id = min(img_paths.keys())
     while programm_finish == False:
         cur_img_path = img_paths[cur_img_id]
@@ -93,3 +114,6 @@ txt_outpath = 'classificator.txt'
 load_previous_markup = True
 write_classes_to_txt = True
 img_classes = markup(dataset_path, txt_outpath)
+
+debug(img_classes)
+# debug(img_paths)
