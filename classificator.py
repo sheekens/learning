@@ -35,13 +35,6 @@ def load_classes_from_txt(txt_outpath):
         img_classes[cur_img_id] = img_class
     return img_classes
 
-def actualise_img_classes(dataset_path,txt_outpath):
-    img_paths = load_img_paths(dataset_path)
-    img_classes = load_classes_from_txt(txt_outpath)
-    for k in img_classes.keys():
-        if k not in img_paths.keys():
-            del img_classes[k]
-
 def markup(dataset_path, txt_outpath):
     programm_finish = False
     img_paths = load_img_paths(dataset_path)
