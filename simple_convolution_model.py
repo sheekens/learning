@@ -8,6 +8,7 @@ import numpy as np
 import cv2
 from varname.helpers import debug
 from torch_convolution import manual_transform_to_tenzor
+import random
 
 class Simple2DConv(nn.Module):
     def __init__(
@@ -37,18 +38,18 @@ class Simple2DConv(nn.Module):
 
     def forward(self, x: Tensor): 
         x = self.conv1.forward(x)
-        debug(x.shape, prefix='conv1')
+        # debug(x.shape, prefix='conv1')
         x = self.bn1.forward(x)
         x = self.activation.forward(x)
         x = self.conv2.forward(x)
-        debug(x.shape, prefix='conv2')
+        # debug(x.shape, prefix='conv2')
         x = self.bn2.forward(x)
         x = self.activation.forward(x)
         return x
 
     
 
-if __name__ == '__main__' : 
+if __name__ == '__main__' :
     img_path = 'output\sportsMOT_volley_light_dataset\player_0\sportsMOT_volley_light_dataset_00_000001_x1_696_y1_442_x2_748_y2_565_square.jpg'
 
     img = cv2.imread(img_path)
@@ -69,30 +70,45 @@ if __name__ == '__main__' :
     out = stupid_conv_model.forward(img_torch_tensor)
     debug(out.shape)
 
-    convert = out[:,:16,:,:]
-    debug(convert.shape)
-    convert = convert.squeeze(0)
-    debug(convert.shape)
-    convert = convert.permute(1, 2, 0) # HWC
-    debug(convert.shape)
-    convert = (convert.detach().cpu().numpy()) * 255
-    debug(type(convert), convert.shape)
-    convert = convert.astype(np.uint8)
-    cv2.imshow('aaa', convert)
+    channels = (out.shape[1])
+    debug(channels)
+    resulting_shit = np.zeros((119,119,1))
+    stack_counter = 0
+    for chan in random.sample(range(1, channels), 16):
+        convert = out[:,chan-1:chan,:,:]
+        # 1 отрезать "служебный канал" в out
+        convert = convert.squeeze(0)
+	# 2 менять chw на hwc
+        convert = convert.permute(1, 2, 0) # HWC
+	# 3 переводить в numpy
+	# 4 умножать на 255
+        convert = (convert.detach().cpu().numpy()) * 255
+	# 5 переводить в uint8
+        convert = convert.astype(np.uint8)
+        stack_counter += 1
+        if stack_counter == 1:
+            resulting_shit1 = convert
+            continue
+        if 1 < stack_counter <= 4:
+             resulting_shit1 = np.hstack((convert, resulting_shit1))
+        if stack_counter == 5:
+            resulting_shit2 = convert
+            continue
+        if 5 < stack_counter <= 8:
+             resulting_shit2 = np.hstack((convert, resulting_shit2))
+        if stack_counter == 9:
+            resulting_shit3 = convert
+            continue
+        if 9 < stack_counter <= 12:
+             resulting_shit3 = np.hstack((convert, resulting_shit3))
+        if stack_counter == 13:
+            resulting_shit4 = convert
+            continue
+        if stack_counter > 13:
+             resulting_shit4 = np.hstack((convert, resulting_shit4))
+    resulting_shittest = np.vstack((resulting_shit1, resulting_shit2, resulting_shit3, resulting_shit4))
+    cv2.imshow('aaa', resulting_shittest)
     cv2.waitKey(-1)
-
-#     out = out.squeeze(0) # 1CHW
-#     debug(out.shape)
-#     out = out.permute(1, 2, 0) # HWC
-#     debug(out.shape)
-#     debug(type(out))
-# #     out = out.numpy()
-#     out = out.detach().cpu().numpy()
-#     debug(out.shape)
-#     debug(type(out))
-#     cv2.imwrite('torch_tensor.jpg', out)
-
-
 
 #     out = out.to(torch.float32)
     
