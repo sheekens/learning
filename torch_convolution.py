@@ -73,7 +73,11 @@ if __name__ == '__main__' :
     # debug(output_tensor)
     # torch.manual_seed(420)
     # np.random.seed(420)
+<<<<<<< HEAD
     img_path = 'output\sportsMOT_volley_light_dataset\player_0\sportsMOT_volley_light_dataset_00_000001_x1_696_y1_442_x2_748_y2_565_square.jpg';
+=======
+    img_path = './output/snippets/match_001_short/player_0/match_001_short_00_000021_x1_790_y1_443_x2_910_y2_563.jpg';
+>>>>>>> fd4d273d23ee5bb5f12e81c2292b82a33d154f69
     img = cv2.imread(img_path)
     h = img.shape[0]
     w = img.shape[1]
