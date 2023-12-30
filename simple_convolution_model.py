@@ -76,7 +76,7 @@ if __name__ == '__main__' :
     stack_counter = 0
     for chan in random.sample(range(1, channels), 16):
         convert = out[:,chan-1:chan,:,:]
-        # 1 отрезать "служебный канал" в out
+    # 1 отрезать "служебный канал" в out
         convert = convert.squeeze(0)
 	# 2 менять chw на hwc
         convert = convert.permute(1, 2, 0) # HWC
@@ -109,13 +109,3 @@ if __name__ == '__main__' :
     resulting_shittest = np.vstack((resulting_shit1, resulting_shit2, resulting_shit3, resulting_shit4))
     cv2.imshow('aaa', resulting_shittest)
     cv2.waitKey(-1)
-
-#     out = out.to(torch.float32)
-    
-    # debug(out[0][15] * 255)
-#     debug(out)
-#     cv2.imshow('test', out[0][0][0][0])
-#     cv2.waitKey(-1)
-
-    ## Homework
-    ## 16 random chanels from out : visualize and glue 16 of them (4x4)
