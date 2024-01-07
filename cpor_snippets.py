@@ -67,12 +67,12 @@ def crop_snippets(match_path:str , outdir: str, square: bool):
                 :
             ]
             debug(cv_bbox_to_crop)
-            cv2.imshow('player_snippet_{}'.format(player_id), player_snippet)
-            cv2.waitKey(20)
-            cv2.destroyAllWindows()
+            # cv2.imshow('player_snippet_{}'.format(player_id), player_snippet)
+            # cv2.waitKey(20)
+            # cv2.destroyAllWindows()
             cv2.imwrite(snippet_outpath, player_snippet)
             print('snippet written to {}'.format(snippet_outpath))
-if name == 'main' :
-    outdir = 'output'
-    match_path = r'C:\Users\user\Desktop\ml_course\projects\lesson1\datasets\sportsMOT_volley_starter_pack\sportsMOT_volley_light_dataset'
-    crop_snippets(match_path, outdir, True)
+# if __name__ == '__main__' :
+outdir = 'output'
+match_path = r'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
+crop_snippets(match_path, outdir, True)
