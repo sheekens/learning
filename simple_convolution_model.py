@@ -15,14 +15,14 @@ class Simple2DConv(nn.Module):
             self,
             ):
         super().__init__()
-        # batch norm  ( statefull )
+        # batch norm (statefull)
         self.bn1 = nn.BatchNorm2d(
                 num_features=64
                 )
         self.bn2 = nn.BatchNorm2d(
                 num_features=128
                 )
-        # svertka (stetfull)
+        # svertka (statefull)
         self.conv1 = nn.Conv2d(
                 in_channels=3,
                 out_channels=64,
@@ -47,65 +47,56 @@ class Simple2DConv(nn.Module):
         x = self.activation.forward(x)
         return x
 
-    
 
 if __name__ == '__main__' :
     img_path = 'output\sportsMOT_volley_light_dataset\player_0\sportsMOT_volley_light_dataset_00_000001_x1_696_y1_442_x2_748_y2_565_square.jpg'
 
     img = cv2.imread(img_path)
-    debug(type(img))
     img_tensor = torch.from_numpy(img)
-    # #HWC to [CHW] default and to (0,1)
-    # transform = torchvision.transforms.ToTensor()
-    # img_torch_tensor = transform(img)
-
     # #HWC to [CHW] our and to (0,1)
     img_torch_tensor = manual_transform_to_tenzor(img_tensor)
-    debug(img_tensor.shape, type(img_tensor))
-    debug(img_torch_tensor.shape)
-
     stupid_conv_model = Simple2DConv()
-    debug(img.shape)
-    debug(img_torch_tensor.shape)
     out = stupid_conv_model.forward(img_torch_tensor)
-    debug(out.shape)
-
     channels = (out.shape[1])
-    debug(channels)
-    resulting_shit = np.zeros((119,119,1))
-    stack_counter = 0
+    converted_imgs_list = []
     for chan in random.sample(range(1, channels), 16):
-        convert = out[:,chan-1:chan,:,:]
+        converted_img = out[:,chan-1:chan,:,:]
     # 1 отрезать "служебный канал" в out
-        convert = convert.squeeze(0)
+        converted_img = converted_img.squeeze(0)
 	# 2 менять chw на hwc
-        convert = convert.permute(1, 2, 0) # HWC
+        converted_img = converted_img.permute(1, 2, 0) # HWC
 	# 3 переводить в numpy
 	# 4 умножать на 255
-        convert = (convert.detach().cpu().numpy()) * 255
+        converted_img = (converted_img.detach().cpu().numpy()) * 255
 	# 5 переводить в uint8
-        convert = convert.astype(np.uint8)
-        stack_counter += 1
-        if stack_counter == 1:
-            resulting_shit1 = convert
-            continue
-        if 1 < stack_counter <= 4:
-             resulting_shit1 = np.hstack((convert, resulting_shit1))
-        if stack_counter == 5:
-            resulting_shit2 = convert
-            continue
-        if 5 < stack_counter <= 8:
-             resulting_shit2 = np.hstack((convert, resulting_shit2))
-        if stack_counter == 9:
-            resulting_shit3 = convert
-            continue
-        if 9 < stack_counter <= 12:
-             resulting_shit3 = np.hstack((convert, resulting_shit3))
-        if stack_counter == 13:
-            resulting_shit4 = convert
-            continue
-        if stack_counter > 13:
-             resulting_shit4 = np.hstack((convert, resulting_shit4))
-    resulting_shittest = np.vstack((resulting_shit1, resulting_shit2, resulting_shit3, resulting_shit4))
-    cv2.imshow('aaa', resulting_shittest)
+        converted_img = converted_img.astype(np.uint8)
+        converted_imgs_list.append(converted_img)
+    
+    ## вынести в аргумент функции!!!!
+    row_len = 4
+
+    stack_amount = int(len(converted_imgs_list) / row_len)
+    rows_list = []
+    imgs_nums_list = []
+    vstack_rows = ()
+    previous = 0
+    imgs_nums_list_counter = 0
+    current = row_len
+    converted_imgs_list_hstack = np.hstack((converted_imgs_list))
+
+    for j in range(stack_amount):
+        for i in range(row_len):
+            rowed_imgs = np.hstack((converted_imgs_list[previous:current]))
+            rows_list.append(rowed_imgs)
+        cv2.imshow('aaa', rowed_imgs)
+        cv2.waitKey(-1)
+        imgs_nums_list.append(previous)
+        vstack_rows = vstack_rows + (rows_list[imgs_nums_list[j]],)
+        imgs_nums_list_counter += 1
+        previous += row_len
+        current += row_len
+        
+    stacked_rows = np.vstack(vstack_rows)
+        
+    cv2.imshow('aaa', stacked_rows)
     cv2.waitKey(-1)
