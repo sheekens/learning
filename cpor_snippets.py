@@ -72,7 +72,7 @@ def crop_snippets(match_path:str , outdir: str, square: bool):
             # cv2.destroyAllWindows()
             cv2.imwrite(snippet_outpath, player_snippet)
             print('snippet written to {}'.format(snippet_outpath))
-# if __name__ == '__main__' :
-outdir = 'output'
-match_path = r'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
-crop_snippets(match_path, outdir, True)
+if __name__ == '__main__' :
+    outdir = 'output'
+    match_path = r'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
+    crop_snippets(match_path, outdir, True)
