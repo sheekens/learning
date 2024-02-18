@@ -1,8 +1,9 @@
 # sheekens home py .\polar_dataloader.py --dataset_path D:\testing\learning\datasets\POLAR_dataset_100
 # sheekens work py .\polar_dataloader.py --dataset_path C:\learning\learning\datasets\POLAR_dataset_100
 # python current_files\polar_dataloader.py --dataset_path C:\cod\datasets\POLAR_dataset_100
+
 import os
-import torch
+# import torch
 import cv2
 import numpy as np
 import argparse
@@ -11,7 +12,7 @@ import json
 from pprint import pprint
 from varname.helpers import debug
 from cpor_snippets import square_from_rectangle
-import pathlib
+from tools import ensure_folder
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -20,29 +21,6 @@ def parse_arguments():
         "--is_debug", default=0, type=int, help="enable fast run on several samples"
     )
     return parser.parse_args()
-
-# def square_snippet(img, bbox_x1y1x2y2, is_show=False):
-#     x1,y1,w,h = bbox_x1y1x2y2_to_xywh(bbox_x1y1x2y2)
-#     max_side = max(w,h)
-#     snippet = np.zeros(shape=(max_side, max_side, 3),
-#                        dtype=img.dtype)
-#     snippet[:,:,1].fill(255)
-#     snippet_x1y1x2y2 = square_from_rectangle((x1,y1,w,h))
-#     snippet_from_img = img[
-#         snippet_x1y1x2y2[1]:snippet_x1y1x2y2[3],
-#         snippet_x1y1x2y2[0]:snippet_x1y1x2y2[2],
-#         :
-#     ]
-#     snippet[
-#         :snippet_from_img.shape[0],
-#         :snippet_from_img.shape[1],
-#         :
-#     ] = snippet_from_img
-#     if is_show:
-#         cv2.imshow('snippet', snippet)
-#         cv2.waitKey(-1)
-#         cv2.destroyAllWindows()
-#     return snippet
 
 def square_snippet(img, bbox_x1y1x2y2, is_show=False):
     x1,y1,w,h = bbox_x1y1x2y2_to_xywh(bbox_x1y1x2y2)
@@ -56,32 +34,19 @@ def square_snippet(img, bbox_x1y1x2y2, is_show=False):
         snippet_x1y1x2y2[0]:snippet_x1y1x2y2[2],
         :
     ]
-    # cv2.imshow('snippet', snippet_from_img)
-    # cv2.waitKey(-1)
-    # cv2.destroyAllWindows()
-    # exit()
-    # snippet[
-    #     :snippet_from_img.shape[0],
-    #     :snippet_from_img.shape[1],
-    #     :
-    # ] = snippet_from_img
+    h,w,c = snippet_from_img.shape
     if w > h:
         top = (w-h)//2
         left = 0
-        # debug(w,h,top,left)
     else:
         top = 0
         left = (h-w)//2
-        # debug(w,h,top,left)
     bottom = top
     right = left
-    # debug(bottom, right)
     borderType = cv2.BORDER_CONSTANT
-    # value = [200,200,200]
-    # snippet = img.copy()
-    snippet = cv2.copyMakeBorder(snippet_from_img, top, bottom, left, right, borderType, value = [200,200,200])
+    # snippet = cv2.copyMakeBorder(snippet_from_img, top, bottom, left, right, borderType, value = [200,200,200])
+    snippet = cv2.copyMakeBorder(snippet_from_img, top, bottom, left, right, borderType, value = [0,0,0])
     if is_show:
-        debug(snippet.shape)
         cv2.imshow('snippet', snippet)
         cv2.waitKey(-1)
         cv2.destroyAllWindows()
@@ -108,8 +73,6 @@ class PolarSnippets(Dataset):
                     img_class = os.path.basename(root)
                     self.img_paths.append(img_path)
                     self.img_classes.append(img_class)
-        # debug(self.imgs_paths, self.img_classes)
-        # debug(len(self.imgs_paths), len(self.img_classes))
     def __len__(self):
         return len(self.img_paths)
     def __getitem__(self, index):
@@ -191,7 +154,6 @@ class Polar_dataset(Dataset):
             img_path = self.imgs_paths[img_name]
             img = cv2.imread(img_path)
             snippet = img.copy()
-            # print(img_name)
             squared_snippet = square_snippet(snippet, self.bndbox_dict[img_name], is_show=False)
             snippet_class_path = os.path.join(self.snippets_dir, self.img_classes_dict[img_name])
             ensure_folder(snippet_class_path)
@@ -199,22 +161,15 @@ class Polar_dataset(Dataset):
             cv2.imwrite(snippet_path, squared_snippet)
             print(snippet_path)
 
-def ensure_folder(dir_fname):
-    if not os.path.exists(dir_fname):
-        try:
-            pathlib.Path(dir_fname).mkdir(parents=True, exist_ok=True)
-        except PermissionError:
-            print('Unable to create {} directory. Permission denied'.format(dir_fname))
-            return False
-    return os.path.exists(dir_fname)
-
 if __name__ == "__main__":
     arguments = parse_arguments()
     dataset_path = arguments.dataset_path
     is_debug = arguments.is_debug
 
     # polar_dataset = Polar_dataset(dataset_path)
+
     polar_snippets_dataset = PolarSnippets(dataset_path, 228)
+
     polar_snippets_dataloader = DataLoader(
         dataset=polar_snippets_dataset,
         batch_size=2
@@ -222,4 +177,5 @@ if __name__ == "__main__":
     for img_batch, label_batch in polar_snippets_dataloader:
         debug(img_batch.size(), label_batch)
         exit()
+
     # polar_dataset.visualize_bboxes()
