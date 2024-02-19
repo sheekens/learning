@@ -3,7 +3,7 @@
 # python current_files\polar_dataloader.py --dataset_path C:\cod\datasets\POLAR_dataset_100
 
 import os
-# import torch
+import torch
 import cv2
 import numpy as np
 import argparse
