@@ -35,6 +35,10 @@ class Simple2DConv(nn.Module):
                 )
         # aktivatsiya (stateless)
         self.activation = nn.ReLU()
+        self.avg_pool = nn.AdaptiveAvgPool2d((1,1))
+        self.classes_number = 9
+        self.classification_head = nn.Linear(128, self.classes_number)
+        self.softmax = nn.Softmax(1)
 
     def forward(self, x: Tensor): 
         x = self.conv1.forward(x)
@@ -45,6 +49,9 @@ class Simple2DConv(nn.Module):
         # debug(x.shape, prefix='conv2')
         x = self.bn2.forward(x)
         x = self.activation.forward(x)
+        x = self.avg_pool(x)
+        x = torch.flatten(x, 1)
+        x = self.classification_head(x)
         return x
 
 

@@ -4,6 +4,7 @@
 
 import os
 import torch
+import torchvision
 import cv2
 import numpy as np
 import argparse
@@ -84,6 +85,10 @@ class PolarSnippets(Dataset):
             src=img,
             dsize=(self.square_img_size,self.square_img_size)
         )
+        transform = torchvision.transforms.ToTensor()
+        square_img = transform(square_img)
+        # square_img = torch.from_numpy(square_img)
+        # square_img = square_img.permute(2,0,1) # CHW
         return square_img, img_class
 
 class Polar_dataset(Dataset):
@@ -175,10 +180,11 @@ if __name__ == "__main__":
         dataset=polar_snippets_dataset,
         batch_size=2
     )
-    # for img_batch, label_batch in polar_snippets_dataloader:
-        # debug(img_batch.size(), label_batch)
-        # exit()
-    
+    for img_batch, label_batch in polar_snippets_dataloader:
+        debug(img_batch.size(), label_batch)
+        debug(img_batch.max())
+        exit()
+
     test_img = polar_snippets_dataset[0][0]
     debug(test_img.shape)
     debug(type(test_img))
