@@ -67,6 +67,7 @@ class PolarSnippets(Dataset):
         self.dataset_path = dataset_path
         self.img_paths = []
         self.img_classes = []
+        self.classes_names = set()
         self.square_img_size = square_img_size
         for root, dirs, files in os.walk(self.dataset_path):
             for file in files:
@@ -75,11 +76,14 @@ class PolarSnippets(Dataset):
                     img_class = os.path.basename(root)
                     self.img_paths.append(img_path)
                     self.img_classes.append(img_class)
+                    self.classes_names.add(img_class)
+        self.classes_names = list(sorted(self.classes_names))
     def __len__(self):
         return len(self.img_paths)
     def __getitem__(self, index):
         img_path = self.img_paths[index]
-        img_class = self.img_classes[index]
+        img_class_name = self.img_classes[index]
+        img_class = self.classes_names.index(img_class_name)
         img = cv2.imread(img_path)
         square_img = cv2.resize(
             src=img,
