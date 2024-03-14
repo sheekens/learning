@@ -1,5 +1,5 @@
 # sheekens home py .\polar_dataloader.py --dataset_path D:\testing\learning\datasets\POLAR_dataset_100
-# sheekens work py .\polar_dataloader.py --dataset_path C:\learning\learning\datasets\POLAR_dataset_100
+# sheekens work py .\polar_dataloader.py --dataset_path C:\testing\learning\datasets\POLAR_dataset_100
 # python current_files\polar_dataloader.py --dataset_path C:\cod\datasets\POLAR_dataset_100
 
 import os
@@ -189,12 +189,12 @@ if __name__ == "__main__":
         debug(img_batch.max())
         exit()
 
-    test_img = polar_snippets_dataset[0][0]
-    debug(test_img.shape)
-    debug(type(test_img))
-    test_img = torch.from_numpy(test_img)
-    debug(type(test_img))
-    test_img = manual_transform_to_tenzor(test_img)
-    debug(test_img.shape)
+    # test_img = polar_snippets_dataset[0][0]
+    # debug(test_img.shape)
+    # debug(type(test_img))
+    # test_img = torch.from_numpy(test_img)
+    # debug(type(test_img))
+    # test_img = manual_transform_to_tenzor(test_img)
+    # debug(test_img.shape)
     
     # polar_dataset.visualize_bboxes()
