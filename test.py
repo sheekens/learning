@@ -1,3 +1,12 @@
+a = 72.78888888888889%
+b = 2
+print('{0:04d}'.format(a))
+# print('{}/simple2DConv.{0:04d}.pt'.format(b, a))
+# print('{b}/simple2DConv.{a:04d}.pt'.format(b, a))
+print(f'{b}/simple2DConv.{a:04f}.pt')
+
+
+exit()
 import os
 import cv2
 from varname.helpers import debug

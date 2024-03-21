@@ -1,5 +1,5 @@
 # sheekens home py .\polar_dataloader.py --dataset_path D:\testing\learning\datasets\POLAR_dataset_100
-# sheekens work py .\polar_dataloader.py --dataset_path C:\testing\learning\datasets\POLAR_dataset_100
+# sheekens work py .\polar_dataloader.py --dataset_path C:\testing\learning\datasets\POLAR_dataset_train_1000_val_200
 # python current_files\polar_dataloader.py --dataset_path C:\cod\datasets\POLAR_dataset_100
 
 import os
@@ -110,6 +110,7 @@ class Polar_dataset(Dataset):
             for file in files:
                 if ".json" in file:
                     path_to_annotations = os.path.join(root, file)
+                    debug(path_to_annotations)
                     with open(path_to_annotations, "r") as annotations_file:
                         annotations_dict = json.load(annotations_file)
                     img_name = annotations_dict["filename"]
@@ -174,16 +175,20 @@ class Polar_dataset(Dataset):
 if __name__ == "__main__":
     arguments = parse_arguments()
     dataset_path = arguments.dataset_path
+    debug(dataset_path)
     is_debug = arguments.is_debug
 
-    # polar_dataset = Polar_dataset(dataset_path)
+    polar_dataset = Polar_dataset(dataset_path)
+    print(1)
 
     polar_snippets_dataset = PolarSnippets(dataset_path, 228)
+    print(2)
 
     polar_snippets_dataloader = DataLoader(
         dataset=polar_snippets_dataset,
         batch_size=2
     )
+    print(3)
     for img_batch, label_batch in polar_snippets_dataloader:
         debug(img_batch.size(), label_batch)
         debug(img_batch.max())
