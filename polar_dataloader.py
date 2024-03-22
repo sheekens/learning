@@ -83,7 +83,7 @@ class PolarSnippets(Dataset):
     def __getitem__(self, index):
         img_path = self.img_paths[index]
         img_class_name = self.img_classes[index]
-        img_class = self.classes_names.index(img_class_name)
+        img_class = self.classes_names.index(img_class_name) # type: ignore
         img = cv2.imread(img_path)
         square_img = cv2.resize(
             src=img,

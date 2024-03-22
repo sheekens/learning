@@ -65,6 +65,7 @@ for epoch in range(epochs):
             total_conf_matrix += conf_matrix
     print('train')
     print(total_conf_matrix)
+    debug(out_probabilities)
     t2 = time.time()
 
     ### validation
@@ -79,14 +80,14 @@ for epoch in range(epochs):
         # optimizer.step()
 
         _, preds = torch.max(out, 1)
-        debug(preds)
+        # debug(preds)
         conf_matrix = confusion_matrix(label_batch, preds, labels=classes_indexes_array)
         if total_conf_matrix is None:
             total_conf_matrix = conf_matrix
         else:
             total_conf_matrix += conf_matrix
     row_num = 0
-    for true_class in total_conf_matrix:
+    for true_class in total_conf_matrix: # type: ignore
         col_num = 0
         for predicted_class in true_class:
             if len(fp) < col_num+1:
@@ -105,6 +106,7 @@ for epoch in range(epochs):
         row_num += 1
     print('validation')
     print(total_conf_matrix)
+    debug(out_probabilities)
     # debug(fp)
     # debug(tp)
     # debug(fn)
@@ -113,7 +115,7 @@ for epoch in range(epochs):
         accuracy = cur_accuracy
         print(f'new accuracy reached! it is [{accuracy*100}%] by now\nsaving model of epoch [{epoch:04d}]')
         torch.save(model.state_dict(), f'{dataset_path}/Simple2DConv.{epoch:04d}.pt')
-    for true_class in range(len(total_conf_matrix)):
+    for true_class in range(len(total_conf_matrix)): # type: ignore
         precision[true_class] = (tp[true_class] / (tp[true_class] + fp[true_class]))*100
         recall[true_class] = (tp[true_class] / (tp[true_class] + fn[true_class]))*100
     print('epoching done by [{:.02f}s]\n'.format((t2 - t1)))
