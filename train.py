@@ -14,7 +14,8 @@ import time
 
 # dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_100' ##sheekens home
 # dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_100' ##sheekens work
-dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
+dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
+# dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
 train_polar_snippets_dataset = PolarSnippets((dataset_path+'/train'), square_img_size=24)
 # train_polar_snippets_dataset = PolarSnippets((dataset_path+'/val'), square_img_size=24)
 train_polar_snippets_dataloader = DataLoader(
@@ -32,7 +33,7 @@ optimizer = torch.optim.SGD(
     model.parameters(),
     lr=0.001
 )
-epochs = 2
+epochs = 1
 classes_indexes_array = np.arange(0,len(train_polar_snippets_dataset.classes_names),1)
 t1 = time.time()
 accuracy = 0
@@ -58,11 +59,19 @@ for epoch in range(epochs):
         optimizer.step()
 
         _, preds = torch.max(out, 1)
+        # debug(out_probabilities, label_batch, preds, classes_indexes_array)
         conf_matrix = confusion_matrix(label_batch, preds, labels=classes_indexes_array)
         if total_conf_matrix is None:
             total_conf_matrix = conf_matrix
         else:
             total_conf_matrix += conf_matrix
+        # print(total_conf_matrix)
+        # debug(label_batch)
+        # exit()
+        # if label_batch == ([1,1]):
+        if 2 in label_batch:
+            print(f'label_batch = {label_batch}')
+            break
     print('train')
     print(total_conf_matrix)
     debug(out_probabilities)
@@ -81,6 +90,7 @@ for epoch in range(epochs):
 
         _, preds = torch.max(out, 1)
         # debug(preds)
+        # debug(out_probabilities, label_batch, preds, classes_indexes_array)
         conf_matrix = confusion_matrix(label_batch, preds, labels=classes_indexes_array)
         if total_conf_matrix is None:
             total_conf_matrix = conf_matrix
