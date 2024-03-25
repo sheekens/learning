@@ -8,6 +8,7 @@ from simple_convolution_model import Simple2DConv
 from varname.helpers import debug
 from sklearn.metrics import confusion_matrix, accuracy_score
 import time
+import cv2
 # from evidently.metric_preset import ClassificationPreset
 # from evidently.report import Report
 
@@ -18,6 +19,7 @@ dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' #
 # dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
 train_polar_snippets_dataset = PolarSnippets((dataset_path+'/train'), square_img_size=24)
 # train_polar_snippets_dataset = PolarSnippets((dataset_path+'/val'), square_img_size=24)
+# train_polar_snippets_dataset.shuffle_imgs()
 train_polar_snippets_dataloader = DataLoader(
     dataset=train_polar_snippets_dataset,
     batch_size=2
@@ -27,6 +29,8 @@ val_polar_snippets_dataloader = DataLoader(
     dataset=val_polar_snippets_dataset,
     batch_size=2
 )
+# print(val_polar_snippets_dataset)
+# exit()
 model = Simple2DConv()
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(
@@ -49,8 +53,30 @@ for epoch in range(epochs):
     total_conf_matrix = None
     
     ### train
-
+    # train_polar_snippets_dataloader = np.random.shuffle(train_polar_snippets_dataloader)
+    # train_polar_snippets_dataset.shuffle_imgs()
     for img_batch, label_batch in train_polar_snippets_dataloader:
+        # label_id = 0
+        # # print(img_batch, label_batch)
+        # # exit()
+        # for img in img_batch:
+        #     img_batch = img_batch.numpy()
+        #     print(type(img_batch))
+        #     # img2show = cv2.imread(img_batch[label_id])
+        # #     img2show = cv2.putText(
+        # #         img2show,
+        # # #     str('frame {} class {}'.format(cur_img_id, img_classes[cur_img_id])),
+        # #     str('frame {}'.format(label_batch)),
+        # #     (10, 25),
+        # #     1,
+        # #     1.7,
+        # #     (200, 100, 240),
+        # #     2
+        # # )
+        #     cv2.imshow('snippet', img_batch)
+        #     # cv2.imshow('snippet', img2show)
+        #     cv2.waitKey(-1)
+        # continue
         out = model(img_batch)
         out_probabilities = model.softmax(out)
         loss = loss_fn(out, label_batch)
@@ -69,9 +95,10 @@ for epoch in range(epochs):
         # debug(label_batch)
         # exit()
         # if label_batch == ([1,1]):
-        if 2 in label_batch:
-            print(f'label_batch = {label_batch}')
-            break
+    #     if 2 in label_batch:
+    #         print(f'label_batch = {label_batch}')
+    #         break
+    # exit()
     print('train')
     print(total_conf_matrix)
     debug(out_probabilities)

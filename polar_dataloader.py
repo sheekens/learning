@@ -16,6 +16,7 @@ from varname.helpers import debug
 from cpor_snippets import square_from_rectangle
 from tools import ensure_folder
 from torch_convolution import manual_transform_to_tenzor
+import random
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -79,6 +80,11 @@ class PolarSnippets(Dataset):
                     self.img_classes.append(img_class)
                     self.classes_names.add(img_class)
         self.classes_names = list(sorted(self.classes_names))
+        # self.img_paths = random.shuffle(self.img_paths)
+        # print(self.img_paths)
+    def shuffle_imgs(self):
+        self.img_paths = sorted(self.img_paths, key=lambda k: random.random())
+        # self.img_paths = np.random.shuffle(self.img_paths)
     def __len__(self):
         return len(self.img_paths)
     def __getitem__(self, index):
@@ -94,6 +100,7 @@ class PolarSnippets(Dataset):
         square_img = transform(square_img)
         # square_img = torch.from_numpy(square_img)
         # square_img = square_img.permute(2,0,1) # CHW
+        # print(self.img_paths)
         return square_img, img_class
 
 class Polar_dataset(Dataset):

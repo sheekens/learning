@@ -1,9 +1,14 @@
-a = 72.78888888888889%
-b = 2
-print('{0:04d}'.format(a))
-# print('{}/simple2DConv.{0:04d}.pt'.format(b, a))
-# print('{b}/simple2DConv.{a:04d}.pt'.format(b, a))
-print(f'{b}/simple2DConv.{a:04f}.pt')
+import random
+a = ['D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_31071.png',
+     'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_32249.png',
+     'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_32752.png',
+     'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_33261.png',
+     'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_33313.png',
+     'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_33736.png',
+     'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_34171.png']
+# a = random.shuffle(a)
+b = sorted(a, key=lambda k: random.random())
+print(b)
 
 
 exit()
