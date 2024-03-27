@@ -9,19 +9,12 @@ from varname.helpers import debug
 from sklearn.metrics import confusion_matrix, accuracy_score
 import time
 import cv2
-# from evidently.metric_preset import ClassificationPreset
-# from evidently.report import Report
-
 
 # dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_100' ##sheekens home
 # dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_100' ##sheekens work
-# dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
-dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
-# train_polar_snippets_dataset.shuffle_imgs()
-# PolarSnippets((dataset_path+'/train'), square_img_size=24).shuffle_imgs()
+dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
+# dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
 train_polar_snippets_dataset = PolarSnippets((dataset_path+'/train'), square_img_size=24)
-# train_polar_snippets_dataset = PolarSnippets((dataset_path+'/val'), square_img_size=24)
-# exit()
 train_polar_snippets_dataloader = DataLoader(
     dataset=train_polar_snippets_dataset,
     batch_size=2
@@ -31,54 +24,32 @@ val_polar_snippets_dataloader = DataLoader(
     dataset=val_polar_snippets_dataset,
     batch_size=2
 )
-# print(val_polar_snippets_dataset)
-# exit()
 model = Simple2DConv()
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(
     model.parameters(),
     lr=0.001
 )
-epochs = 5
+epochs = 3
 classes_indexes_array = np.arange(0,len(train_polar_snippets_dataset.classes_names),1)
 t1 = time.time()
-accuracy = 0
-cur_accuracy = 0
-precision = {}
-recall = {}
-tp = []
-fp = []
-fn = []
-pred_sum = 0
+
 for epoch in range(epochs):
+    t2 = time.time()
+    accuracy = 0
+    cur_accuracy = 0
+    precision = {}
+    recall = {}
+    tp = []
+    fp = []
+    fn = []
+    pred_sum = 0
     print(f'current epoch: [{epoch}]')
     total_conf_matrix = None
     
     ### train
-    # train_polar_snippets_dataloader = np.random.shuffle(train_polar_snippets_dataloader)
-    # train_polar_snippets_dataset.shuffle_imgs()
+
     for img_batch, label_batch in train_polar_snippets_dataloader:
-        # label_id = 0
-        # print(img_batch, label_batch)
-        # exit()
-        # for img in img_batch:
-        #     img_batch = img_batch.numpy()
-        #     print(type(img_batch))
-        #     # img2show = cv2.imread(img_batch[label_id])
-        # #     img2show = cv2.putText(
-        # #         img2show,
-        # # #     str('frame {} class {}'.format(cur_img_id, img_classes[cur_img_id])),
-        # #     str('frame {}'.format(label_batch)),
-        # #     (10, 25),
-        # #     1,
-        # #     1.7,
-        # #     (200, 100, 240),
-        # #     2
-        # # )
-        #     cv2.imshow('snippet', img_batch)
-        #     # cv2.imshow('snippet', img2show)
-        #     cv2.waitKey(-1)
-        # continue
         out = model(img_batch)
         out_probabilities = model.softmax(out)
         loss = loss_fn(out, label_batch)
@@ -93,18 +64,12 @@ for epoch in range(epochs):
             total_conf_matrix = conf_matrix
         else:
             total_conf_matrix += conf_matrix
-        # print(total_conf_matrix)
-        # debug(label_batch)
-        # exit()
-        # if label_batch == ([1,1]):
         # if 2 in label_batch:
         #     print(f'label_batch = {label_batch}')
         #     break
-    # exit()
     print('train')
     print(total_conf_matrix)
     debug(out_probabilities)
-    t2 = time.time()
 
     ### validation
 
@@ -112,13 +77,8 @@ for epoch in range(epochs):
     for img_batch, label_batch in val_polar_snippets_dataloader:
         out = model(img_batch)
         out_probabilities = model.softmax(out)
-        # loss = loss_fn(out, label_batch)
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
 
         _, preds = torch.max(out, 1)
-        # debug(preds)
         # debug(out_probabilities, label_batch, preds, classes_indexes_array)
         conf_matrix = confusion_matrix(label_batch, preds, labels=classes_indexes_array)
         if total_conf_matrix is None:
@@ -144,6 +104,7 @@ for epoch in range(epochs):
             col_num += 1
         row_num += 1
     print('validation')
+    print(total_conf_matrix)
     cur_accuracy = sum(tp) / pred_sum
     if cur_accuracy > accuracy:
         accuracy = cur_accuracy
@@ -152,10 +113,11 @@ for epoch in range(epochs):
     for true_class in range(len(total_conf_matrix)): # type: ignore
         precision[true_class] = (tp[true_class] / (tp[true_class] + fp[true_class]))*100
         recall[true_class] = (tp[true_class] / (tp[true_class] + fn[true_class]))*100
-    print(total_conf_matrix)
     debug(out_probabilities)
     debug(fp)
     debug(tp)
     debug(fn)
     debug(precision, recall)
-    print('epoching done by [{:.02f}s]\n'.format((t2 - t1)))
+    t3 = time.time()
+    print('current epoch done by [{:.02f}s]\n'.format((t3 - t2)))
+print('all epochs done by [{:.02f}s]\n'.format((t3 - t1)))
