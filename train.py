@@ -15,11 +15,13 @@ import cv2
 
 # dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_100' ##sheekens home
 # dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_100' ##sheekens work
-dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
-# dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
+# dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
+dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
+# train_polar_snippets_dataset.shuffle_imgs()
+# PolarSnippets((dataset_path+'/train'), square_img_size=24).shuffle_imgs()
 train_polar_snippets_dataset = PolarSnippets((dataset_path+'/train'), square_img_size=24)
 # train_polar_snippets_dataset = PolarSnippets((dataset_path+'/val'), square_img_size=24)
-# train_polar_snippets_dataset.shuffle_imgs()
+# exit()
 train_polar_snippets_dataloader = DataLoader(
     dataset=train_polar_snippets_dataset,
     batch_size=2
@@ -37,7 +39,7 @@ optimizer = torch.optim.SGD(
     model.parameters(),
     lr=0.001
 )
-epochs = 1
+epochs = 5
 classes_indexes_array = np.arange(0,len(train_polar_snippets_dataset.classes_names),1)
 t1 = time.time()
 accuracy = 0
@@ -57,8 +59,8 @@ for epoch in range(epochs):
     # train_polar_snippets_dataset.shuffle_imgs()
     for img_batch, label_batch in train_polar_snippets_dataloader:
         # label_id = 0
-        # # print(img_batch, label_batch)
-        # # exit()
+        # print(img_batch, label_batch)
+        # exit()
         # for img in img_batch:
         #     img_batch = img_batch.numpy()
         #     print(type(img_batch))
@@ -95,9 +97,9 @@ for epoch in range(epochs):
         # debug(label_batch)
         # exit()
         # if label_batch == ([1,1]):
-    #     if 2 in label_batch:
-    #         print(f'label_batch = {label_batch}')
-    #         break
+        # if 2 in label_batch:
+        #     print(f'label_batch = {label_batch}')
+        #     break
     # exit()
     print('train')
     print(total_conf_matrix)
@@ -142,11 +144,6 @@ for epoch in range(epochs):
             col_num += 1
         row_num += 1
     print('validation')
-    print(total_conf_matrix)
-    debug(out_probabilities)
-    # debug(fp)
-    # debug(tp)
-    # debug(fn)
     cur_accuracy = sum(tp) / pred_sum
     if cur_accuracy > accuracy:
         accuracy = cur_accuracy
@@ -155,5 +152,10 @@ for epoch in range(epochs):
     for true_class in range(len(total_conf_matrix)): # type: ignore
         precision[true_class] = (tp[true_class] / (tp[true_class] + fp[true_class]))*100
         recall[true_class] = (tp[true_class] / (tp[true_class] + fn[true_class]))*100
+    print(total_conf_matrix)
+    debug(out_probabilities)
+    debug(fp)
+    debug(tp)
+    debug(fn)
+    debug(precision, recall)
     print('epoching done by [{:.02f}s]\n'.format((t2 - t1)))
-    # debug(precision, recall)

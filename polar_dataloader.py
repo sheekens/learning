@@ -80,15 +80,26 @@ class PolarSnippets(Dataset):
                     self.img_classes.append(img_class)
                     self.classes_names.add(img_class)
         self.classes_names = list(sorted(self.classes_names))
+        debug(len(self.img_paths), len(self.img_classes))
+        # self.img_paths = sorted(self.img_paths, key=lambda k: random.random())
+        temp = list(zip(self.img_paths, self.img_classes))
+        random.shuffle(temp)
+        self.img_paths, self.img_classes = zip(*temp)
+        # self.img_paths, self.img_paths = list(self.img_paths), list(self.img_classes)
+        # print(self.img_paths)
         # self.img_paths = random.shuffle(self.img_paths)
         # print(self.img_paths)
     def shuffle_imgs(self):
         self.img_paths = sorted(self.img_paths, key=lambda k: random.random())
         # self.img_paths = np.random.shuffle(self.img_paths)
+        print(self.img_paths)
+        # exit()
     def __len__(self):
         return len(self.img_paths)
     def __getitem__(self, index):
         img_path = self.img_paths[index]
+        # print(img_path)
+        # exit()
         img_class_name = self.img_classes[index]
         img_class = self.classes_names.index(img_class_name) # type: ignore
         img = cv2.imread(img_path)
