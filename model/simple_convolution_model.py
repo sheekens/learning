@@ -7,7 +7,7 @@ import torchvision
 import numpy as np
 import cv2
 from varname.helpers import debug
-from torch_convolution import manual_transform_to_tenzor
+from sandbox.torch_convolution import manual_transform_to_tenzor
 import random
 
 class Simple2DConv(nn.Module):

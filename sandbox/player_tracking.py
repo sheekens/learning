@@ -1,3 +1,6 @@
+# TODO оставить дублирующиеся функции из других файлов в dataloadere
+# вынести общте функции в tools
+
 import os 
 import numpy as np 
 import cv2

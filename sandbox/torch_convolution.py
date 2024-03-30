@@ -1,3 +1,5 @@
+# TODO manual_transform_to_tenzor - img_transform_to_tenzor в tools
+
 import torch
 from torch.functional import Tensor
 import torchvision

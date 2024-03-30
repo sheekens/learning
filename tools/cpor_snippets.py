@@ -1,7 +1,7 @@
 import os
 import cv2
 from varname.helpers import debug
-from player_tracking import load_gt, load_img_paths, xywh2x1y1x2y2
+from sandbox.player_tracking import load_gt, load_img_paths, xywh2x1y1x2y2 # TODO xywh2x1y1x2y2 в tools вынести. load_gt, load_img_paths импорт из dataloader
 
 def square_from_rectangle(player_bbox: tuple):
     x, y, w, h = player_bbox

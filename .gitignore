@@ -161,5 +161,4 @@ cython_debug/
 
 # ML studying
 **/output
-**/datasets/POLAR_dataset_100
-**/datasets/POLAR_dataset_train_1000_val_200
+**/datasets

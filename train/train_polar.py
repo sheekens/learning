@@ -2,9 +2,9 @@ import os
 import torch
 import torchvision
 import numpy as np
-from polar_dataloader import PolarSnippets, parse_arguments
+from dataloader.dataloader_polar import PolarSnippets, parse_arguments
 from torch.utils.data import Dataset, DataLoader
-from simple_convolution_model import Simple2DConv
+from model.simple_convolution_model import Simple2DConv
 from varname.helpers import debug
 from sklearn.metrics import confusion_matrix, accuracy_score
 import time

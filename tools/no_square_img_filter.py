@@ -1,3 +1,4 @@
+# TODO перевести в аргпарс и натравить на папку. 
 import os
 from varname.helpers import debug
 import cv2

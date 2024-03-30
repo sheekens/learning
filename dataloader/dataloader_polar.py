@@ -13,9 +13,8 @@ from torch.utils.data import Dataset, DataLoader
 import json
 from pprint import pprint
 from varname.helpers import debug
-from cpor_snippets import square_from_rectangle
-from tools import ensure_folder
-from torch_convolution import manual_transform_to_tenzor
+from tools.cpor_snippets import square_from_rectangle
+from tools.tools import ensure_folder
 import random
 
 def parse_arguments():
