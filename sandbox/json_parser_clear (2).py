@@ -279,8 +279,8 @@ print(derby_result)
 def referees_nationality_check(country):
     referees_nationality_checkdict = []
     index = 0
-    for match in json_data['matches']:
-        for referee in match['referees']:
+    for i in json_data['matches']:
+        for j in i['referees']:
             if json_data['matches'][i]['referees'][j]['nationality'] != country:
                 referees_nationality_checkdict.insert(index, ({'matchid' : json_data['matches'][i]['id'], 'referee_name' : json_data['matches'][i]['referees'][j]['name'], 'country' : json_data['matches'][i]['referees'][j]['nationality']}))
                 index += 1
