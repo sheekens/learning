@@ -1,7 +1,7 @@
-# sheekens home py .\polar_dataloader.py --dataset_path D:\testing\learning\datasets\POLAR_dataset_100
+# sheekens home py .\polar_dataloader.py --dataset_path D:\testing\learning\testdata\POLAR_dataset_100
 # sheekens work py .\polar_dataloader.py --dataset_path C:\testing\learning\datasets\POLAR_dataset_train_1000_val_200
 # sheekens home py .\polar_dataloader.py --dataset_path D:\testing\learning\datasets\POLAR_dataset_train_1000_val_200
-# python current_files\polar_dataloader.py --dataset_path C:\cod\datasets\POLAR_dataset_100
+# python current_files\polar_dataloader.py --dataset_path C:\cod\testdata\POLAR_dataset_100
 
 import os
 import torch
@@ -47,7 +47,6 @@ def square_snippet(img, bbox_x1y1x2y2, is_show=False):
     bottom = top
     right = left
     borderType = cv2.BORDER_CONSTANT
-    # snippet = cv2.copyMakeBorder(snippet_from_img, top, bottom, left, right, borderType, value = [200,200,200])
     snippet = cv2.copyMakeBorder(snippet_from_img, top, bottom, left, right, borderType, value = [0,0,0])
     if is_show:
         cv2.imshow('snippet', snippet)

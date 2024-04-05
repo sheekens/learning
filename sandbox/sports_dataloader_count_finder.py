@@ -3,44 +3,14 @@ import numpy as np
 import cv2
 from typing import List, Dict
 from varname.helpers import debug
+from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
+from tools.tools import xywh2x1y1x2y2
 
 # def img_outdir_save(outdir_path, file_path):
 #     os.makedirs(outdir_path, exist_ok=True)
 #     img_out_path = os.path.join(outdir, os.path.basename(file_path))
 #     cv2.imwrite(img_out_path, file_path)
 #     print('out written to', os.path.abspath(img_out_path))
-
-def load_gt(dataset_path: str): 
-    gt_path = None
-    gt_data= None
-    gt_objects = {}
-    for root, dirs, files in os.walk(dataset_path):
-        for file_name in files:
-            if 'gt.txt' == file_name: 
-                gt_path = os.path.join(root, file_name)
-    if not gt_path: 
-        return None
-    with open(gt_path, 'r') as f:
-        gt_data = f.readlines()
-    for gt_object in gt_data: 
-        gt_object = gt_object.replace('\n', '').split(', ')
-        for i in range(len(gt_object)):
-            gt_object[i] = int(gt_object[i])
-        frame_number, player_id, top_left_x, top_left_y, width, height, _, _, _ = gt_object 
-        if frame_number not in gt_objects.keys(): 
-            gt_objects[frame_number] = {}
-        gt_objects[frame_number][player_id] = (top_left_x, top_left_y, width, height)
-    return gt_objects
-
-def load_img_paths(dataset_path: str) -> Dict[int, str]: 
-    img_paths = {}
-    for root, dirs, files in os.walk(dataset_path):
-        for file_name in files:
-            if '.jpg' in file_name and len(file_name) == 10: 
-                frame_number = int(file_name[:-4])
-                img_paths[frame_number] = os.path.join(root, file_name)
-    return img_paths
-
 
 def run_dataset(dataset_path:str , outdir: str): 
     img_paths = load_img_paths(dataset_path)
@@ -206,19 +176,11 @@ def mix_diff_images(dataset_path, diff_outdir, outdir_path):
         # cv2.waitKey(-1)
     return mix_diff
 
-def xywh2x1y1x2y2(xywh_bbox: tuple):
-    return (
-            xywh_bbox[0],
-            xywh_bbox[1],
-            xywh_bbox[0] + xywh_bbox[2],
-            xywh_bbox[1] + xywh_bbox[3]
-        )
-
 if __name__ == '__main__' :
-    outdir = 'datasets/output_sportsMOT_volley_starter_pack'
-    mix_diff_images_outdir_path = 'datasets/mix_diff_img'
-    diff_outdir = 'datasets/diff_sportsMOT_volley_starter_pack'
-    dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset' 
+    outdir = 'output/output_sportsMOT_volley_starter_pack'
+    mix_diff_images_outdir_path = 'output/mix_diff_img'
+    diff_outdir = 'output/diff_sportsMOT_volley_starter_pack'
+    dataset_path = 'testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset' 
     # run_dataset(dataset_path, outdir)
     frame_diff(dataset_path, diff_outdir)
     # mix_diff_images(dataset_path, diff_outdir, mix_diff_images_outdir_path)

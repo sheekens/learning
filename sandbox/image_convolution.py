@@ -7,7 +7,7 @@ from sports_dataloader_count_finder import load_img_paths
 
 
 
-dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
+dataset_path = 'testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
 dataset_images = load_img_paths(dataset_path)
 
 for image_path in dataset_images.values():

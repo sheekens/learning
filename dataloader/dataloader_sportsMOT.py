@@ -2,6 +2,7 @@ import os
 import numpy as np 
 import cv2
 from typing import List, Dict
+from tools.tools import xywh2x1y1x2y2
 
 def load_gt(dataset_path: str): 
     gt_path = None
@@ -95,15 +96,6 @@ def run_dataset(dataset_path:str , outdir: str):
         cv2.imwrite(img_out_path, img2draw)
         print('out written to', os.path.abspath(img_out_path))
 
-
-def xywh2x1y1x2y2(xywh_bbox: tuple):
-    return (
-            xywh_bbox[0],
-            xywh_bbox[1],
-            xywh_bbox[0] + xywh_bbox[2],
-            xywh_bbox[1] + xywh_bbox[3]
-        )
-
 if __name__ == '__main__' :
-    outdir = 'datasets/output_sportsMOT_volley_starter_pack'
-    run_dataset('datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset', outdir)
+    outdir = 'output/output_sportsMOT_volley_starter_pack'
+    run_dataset('testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset', outdir)

@@ -1,7 +1,8 @@
 import os
 import cv2
 from varname.helpers import debug
-from sandbox.player_tracking import load_gt, load_img_paths, xywh2x1y1x2y2 # TODO xywh2x1y1x2y2 в tools вынести. load_gt, load_img_paths импорт из dataloader
+from tools.tools import xywh2x1y1x2y2
+from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
 
 def square_from_rectangle(player_bbox: tuple):
     x, y, w, h = player_bbox
@@ -74,5 +75,5 @@ def crop_snippets(match_path:str , outdir: str, square: bool):
             print('snippet written to {}'.format(snippet_outpath))
 if __name__ == '__main__' :
     outdir = 'output'
-    match_path = r'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
+    match_path = r'testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
     crop_snippets(match_path, outdir, True)

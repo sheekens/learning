@@ -2,7 +2,7 @@ import cv2 as cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-img = cv2.imread('datasets/mix_diff_img/000075.jpg', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('output/mix_diff_img/000075.jpg', cv2.IMREAD_GRAYSCALE)
 assert img is not None, "file could not be read, check with os.path.exists()"
 # global thresholding
 ret1,th1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)

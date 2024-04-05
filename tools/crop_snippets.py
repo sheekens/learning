@@ -1,7 +1,8 @@
 import os
 import cv2
 from varname.helpers import debug
-from sports_dataloader_count_finder import load_gt, load_img_paths, xywh2x1y1x2y2
+from tools.tools import xywh2x1y1x2y2
+from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
 
 def square_from_rectangle(player_bbox: tuple):
     x, y, w, h = player_bbox
@@ -75,5 +76,5 @@ def crop_snippets(match_path:str , outdir: str, square: bool):
 # if name == 'main' :
 outdir = 'output'
 # match_path = r'C:\Users\user\Desktop\ml_course\projects\lesson1\datasets\sportsMOT_volley_starter_pack\sportsMOT_volley_light_dataset'
-match_path = r'D:\testing\learning\datasets\sportsMOT_volley_starter_pack\sportsMOT_volley_light_dataset'
+match_path = r'D:\testing\learning\testdata\sportsMOT_volley_starter_pack\sportsMOT_volley_light_dataset'
 crop_snippets(match_path, outdir, True)

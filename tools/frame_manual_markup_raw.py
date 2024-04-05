@@ -3,20 +3,12 @@ import numpy as np
 import cv2
 from varname.helpers import debug
 from operator import countOf
+from dataloader.dataloader_sportsMOT import load_img_paths
 
 keyboard_classes_mapping = {
     110: 'moving',
     109: 'static'
     }
-
-def load_img_paths(dataset_path):
-    img_paths = {}
-    for root, dirs, files in os.walk(dataset_path):
-        for file_name in files:
-            if '.jpg' in file_name and len(file_name) == 10: 
-                frame_number = int(file_name[:-4])
-                img_paths[frame_number] = os.path.join(root, file_name)
-    return img_paths
 
 def load_array_classes_from_txt(array_txt_outpath): 
     img_classes_txt= None
@@ -127,8 +119,8 @@ def save_to_txt(img_classes, array_txt_outpath):
         dict_to_txt.write(str(k) + ','+ str(v) + '\n')
     dict_to_txt.close()
 
-dataset_path = 'datasets/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
-array_txt_outpath = 'array_classificator.txt'
+dataset_path = 'testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
+array_txt_outpath = 'tools/array_classificator.txt'
 
 load_previous_markup = False
 write_classes_to_txt = False

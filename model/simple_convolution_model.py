@@ -7,7 +7,7 @@ import torchvision
 import numpy as np
 import cv2
 from varname.helpers import debug
-from sandbox.torch_convolution import manual_transform_to_tenzor
+from tools.tools import img_transform_to_tenzor
 import random
 
 class Simple2DConv(nn.Module):
@@ -61,7 +61,7 @@ if __name__ == '__main__' :
     img = cv2.imread(img_path)
     img_tensor = torch.from_numpy(img)
     # #HWC to [CHW] our and to (0,1)
-    img_torch_tensor = manual_transform_to_tenzor(img_tensor)
+    img_torch_tensor = img_transform_to_tenzor(img_tensor)
     stupid_conv_model = Simple2DConv()
     out = stupid_conv_model.forward(img_torch_tensor)
     channels = (out.shape[1])
