@@ -1,0 +1,1 @@
+print('Valekum salam')
