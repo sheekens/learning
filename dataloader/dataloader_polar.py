@@ -78,10 +78,11 @@ class PolarSnippets(Dataset):
                     self.img_classes.append(img_class)
                     self.classes_names.add(img_class)
         self.classes_names = list(sorted(self.classes_names))
+        # TODO check if torch shuffle shuffles imgs in batch or imgs before putting in batch
         ## sorting lists of img_paths and img_classes the same way
-        temp = list(zip(self.img_paths, self.img_classes))
-        random.shuffle(temp)
-        self.img_paths, self.img_classes = zip(*temp)
+        # temp = list(zip(self.img_paths, self.img_classes))
+        # random.shuffle(temp)
+        # self.img_paths, self.img_classes = zip(*temp)
     def __len__(self):
         return len(self.img_paths)
     def __getitem__(self, index):

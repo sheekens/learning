@@ -1,6 +1,6 @@
 import os
 import torch
-import torchvision
+from torchvision.models import resnet18
 import numpy as np
 from dataloader.dataloader_polar import PolarSnippets, parse_arguments
 from torch.utils.data import Dataset, DataLoader
@@ -9,15 +9,17 @@ from varname.helpers import debug
 from sklearn.metrics import confusion_matrix, accuracy_score
 import time
 import cv2
+from model.resnet_model import ResnetModel
 
-# dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_100' ##sheekens home
-# dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_100' ##sheekens work
+# dataset_path = 'D:/testing/learning/testdata/POLAR_dataset_100' ##sheekens home
+# dataset_path = 'C:/testing/learning/testdata/POLAR_dataset_100' ##sheekens work
 dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
 # dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
 train_polar_snippets_dataset = PolarSnippets((dataset_path+'/train'), square_img_size=24)
 train_polar_snippets_dataloader = DataLoader(
     dataset=train_polar_snippets_dataset,
-    batch_size=2
+    batch_size=2,
+    shuffle=True
 )
 val_polar_snippets_dataset = PolarSnippets(dataset_path+'/val', square_img_size=24)
 val_polar_snippets_dataloader = DataLoader(
@@ -25,12 +27,17 @@ val_polar_snippets_dataloader = DataLoader(
     batch_size=2
 )
 model = Simple2DConv()
+# model = ResnetModel(num_classes=9)
+# model_total_params = sum(p.numel() for p in model.parameters())
+# debug(model_total_params)
+# debug(model)
+# exit()
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(
     model.parameters(),
     lr=0.001
 )
-epochs = 3
+epochs = 5
 classes_indexes_array = np.arange(0,len(train_polar_snippets_dataset.classes_names),1)
 t1 = time.time()
 

@@ -1,4 +1,5 @@
 # TODO вынести общие функции в tools
+# TODO решить проблему с testdata\sportsMOT_volley_starter_pack\sportsMOT_volley_light_dataset\img1 (deleted by us)
 
 import os 
 import numpy as np 
