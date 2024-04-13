@@ -14,7 +14,7 @@ import json
 from pprint import pprint
 from varname.helpers import debug
 from tools.cpor_snippets import square_from_rectangle
-from tools.tools import ensure_folder
+from tools.tools_img import ensure_folder
 import random
 
 def parse_arguments():

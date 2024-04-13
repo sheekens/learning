@@ -1,7 +1,7 @@
 import os
 import cv2
 from varname.helpers import debug
-from tools.tools import xywh2x1y1x2y2
+from tools.tools_img import xywh2x1y1x2y2
 from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
 
 def square_from_rectangle(player_bbox: tuple):

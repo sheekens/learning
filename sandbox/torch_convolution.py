@@ -4,7 +4,7 @@ import torchvision
 import numpy as np
 import cv2
 from varname.helpers import debug
-from tools.tools import img_transform_to_tenzor
+from tools.tools_img import img_transform_to_tenzor
 
 ### Svertochniy sloi
 ### Convolution layer

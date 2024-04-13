@@ -4,7 +4,7 @@ import cv2
 from typing import List, Dict
 from varname.helpers import debug
 from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
-from tools.tools import xywh2x1y1x2y2
+from tools.tools_img import xywh2x1y1x2y2
 
 # def img_outdir_save(outdir_path, file_path):
 #     os.makedirs(outdir_path, exist_ok=True)
