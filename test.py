@@ -1,3 +1,11 @@
+from tools.tools_img import no_square_img_filter, parse_arguments
+
+arguments = parse_arguments()
+dataset_path = arguments.dataset_path
+error_imgs = no_square_img_filter(dataset_path)
+print(error_imgs)
+
+exit()
 import random
 a = ['D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_31071.png',
      'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200/val\\snippets\\walk\\p1_32249.png',

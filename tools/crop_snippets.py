@@ -1,25 +1,7 @@
 import os
 import cv2
 from varname.helpers import debug
-from tools.tools import xywh2x1y1x2y2
-from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
-
-def square_from_rectangle(player_bbox: tuple):
-    x, y, w, h = player_bbox
-    centr = [int(x+w/2), int(y+h/2)]
-    square_side = max(w, h)
-    x1y1x2y2 = [
-        int(centr[0] - square_side/2), 
-        int(centr[1] - square_side/2),
-        int(centr[0] + square_side/2), 
-        int(centr[1] + square_side/2)             
-    ]
-    x1y1x2y2_to_return = []
-    for value in x1y1x2y2:
-        if value < 0:
-            value = 0
-        x1y1x2y2_to_return.append(value)
-    return x1y1x2y2_to_return
+from tools.tools_img import xywh2x1y1x2y2, load_gt, load_img_paths, square_from_rectangle
 
 def crop_snippets(match_path:str , outdir: str, square: bool):
     outdir = os.path.abspath(outdir)

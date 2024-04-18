@@ -3,28 +3,12 @@ import numpy as np
 import cv2
 from varname.helpers import debug
 from operator import countOf
-from dataloader.dataloader_sportsMOT import load_img_paths
+from tools.tools_img import save_dict_to_txt, load_img_paths, load_classes_from_txt
 
 keyboard_classes_mapping = {
     110: 'moving',
     109: 'static'
     }
-
-def load_classes_from_txt(txt_outpath): 
-    img_classes_txt= None
-    img_classes = {}
-    with open(txt_outpath, 'r') as f:
-        img_classes_txt = f.readlines()
-    for img_object in img_classes_txt: 
-        img_object = img_object.replace('\n', '').split(',')
-        for i in range(len(img_object)):
-            img_object[i] = img_object[i]
-        cur_img_id, img_class = img_object
-        cur_img_id = int(cur_img_id)
-        if cur_img_id not in img_classes.keys(): 
-            img_classes[cur_img_id] = {}
-        img_classes[cur_img_id] = img_class
-    return img_classes
 
 def markup(dataset_path, txt_outpath):
     programm_finish = False
@@ -78,7 +62,7 @@ def markup(dataset_path, txt_outpath):
         if pressed_key == 109: #m na angl raskladke
             img_classes[cur_img_id] = keyboard_classes_mapping[109]
         print(pressed_key)
-        save_to_txt(img_classes, txt_outpath)
+        save_dict_to_txt(img_classes, txt_outpath)
         if cur_img_id not in img_paths.keys():
             if cur_img_id > max(img_paths.keys()):
                 cur_img_id = min(img_paths.keys())
@@ -86,12 +70,6 @@ def markup(dataset_path, txt_outpath):
                 cur_img_id = max(img_paths.keys())
     return img_classes
 
-# TODO вынести в tools, добавив флаг на чтение из txt. переименовать точнее
-def save_to_txt(img_classes, txt_outpath):
-    dict_to_txt = open(txt_outpath, 'w')
-    for k, v in img_classes.items():
-        dict_to_txt.write(str(k) + ','+ str(v) + '\n')
-    dict_to_txt.close()
 
 dataset_path = 'testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
 txt_outpath = 'tools/classificator.txt'

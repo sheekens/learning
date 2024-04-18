@@ -3,35 +3,19 @@ import numpy as np
 import cv2
 from varname.helpers import debug
 from operator import countOf
-from dataloader.dataloader_sportsMOT import load_img_paths
+from tools.tools_img import load_img_paths, load_classes_from_txt
 
 keyboard_classes_mapping = {
     110: 'moving',
     109: 'static'
     }
 
-def load_array_classes_from_txt(array_txt_outpath): 
-    img_classes_txt= None
-    img_classes = {}
-    with open(array_txt_outpath, 'r') as f:
-        img_classes_txt = f.readlines()
-    for img_object in img_classes_txt: 
-        img_object = img_object.replace('\n', '').split(',')
-        for i in range(len(img_object)):
-            img_object[i] = img_object[i]
-        cur_img_id, img_class = img_object
-        cur_img_id = int(cur_img_id)
-        if cur_img_id not in img_classes.keys(): 
-            img_classes[cur_img_id] = {}
-        img_classes[cur_img_id] = img_class
-    return img_classes
-
 def markup(dataset_path, array_txt_outpath):
     programm_finish = False
     frames = np.empty((720, 1280, 7))
     img_paths = load_img_paths(dataset_path)
     # if os.path.exists(array_txt_outpath):
-    #     img_classes = load_array_classes_from_txt(array_txt_outpath)
+    #     img_classes = load_classes_from_txt(array_txt_outpath)
     #     if not img_paths.keys() == img_classes.keys():
     #         for key in img_paths.keys():
     #             if not key in img_classes:

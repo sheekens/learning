@@ -37,7 +37,7 @@ optimizer = torch.optim.SGD(
     model.parameters(),
     lr=0.001
 )
-epochs = 5
+epochs = 1
 classes_indexes_array = np.arange(0,len(train_polar_snippets_dataset.classes_names),1)
 t1 = time.time()
 
@@ -116,7 +116,7 @@ for epoch in range(epochs):
     if cur_accuracy > accuracy:
         accuracy = cur_accuracy
         print(f'new accuracy reached! it is [{accuracy*100}%] by now\nsaving model of epoch [{epoch:04d}]')
-        torch.save(model.state_dict(), f'{dataset_path}/Simple2DConv.{epoch:04d}.pt')
+        torch.save(model.state_dict(), f'{dataset_path}/saved_models/Simple2DConv.{epoch:04d}.pt')
     for true_class in range(len(total_conf_matrix)): # type: ignore
         precision[true_class] = (tp[true_class] / (tp[true_class] + fp[true_class]))*100
         recall[true_class] = (tp[true_class] / (tp[true_class] + fn[true_class]))*100

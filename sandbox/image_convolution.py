@@ -2,10 +2,7 @@ import os
 import numpy as np
 import cv2
 from varname.helpers import debug
-from sports_dataloader_count_finder import load_img_paths
-
-
-
+from tools.tools_img import load_img_paths
 
 dataset_path = 'testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset'
 dataset_images = load_img_paths(dataset_path)
