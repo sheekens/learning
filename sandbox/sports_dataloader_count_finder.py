@@ -3,78 +3,13 @@ import numpy as np
 import cv2
 from typing import List, Dict
 from varname.helpers import debug
-from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
-from tools.tools_img import xywh2x1y1x2y2
+from tools.tools_img import xywh2x1y1x2y2, load_gt, load_img_paths, run_dataset
 
 # def img_outdir_save(outdir_path, file_path):
 #     os.makedirs(outdir_path, exist_ok=True)
 #     img_out_path = os.path.join(outdir, os.path.basename(file_path))
 #     cv2.imwrite(img_out_path, file_path)
 #     print('out written to', os.path.abspath(img_out_path))
-
-def run_dataset(dataset_path:str , outdir: str): 
-    img_paths = load_img_paths(dataset_path)
-    gt_objects = load_gt(dataset_path)
-    colors_list = [
-        (255,0,0),
-        (0,255,0),
-        (0,0,255),
-        (255,255,0),
-        (255,0,255),
-        (0,255,255),
-        (100,0,0),
-        (0,100,0),
-        (0,0,100),
-        (100,100,0),
-        (100,0,100),
-        (255,0,100)
-    ]
-    for frame_number, frame_objects in gt_objects.items():
-        try: 
-            img_path = img_paths[frame_number]
-        except KeyError:
-            continue
-        img = cv2.imread(img_path)
-        img2draw = img.copy() 
-        for player_id, player_bbox in frame_objects.items():
-            cv_bbox = xywh2x1y1x2y2(player_bbox)
-            cv2.rectangle(
-                    img2draw, 
-                    #top left 
-                    pt1=(cv_bbox[0], cv_bbox[1]),
-                    #bottom rigth
-                    pt2=(cv_bbox[2], cv_bbox[3]),
-                    color=colors_list[player_id],
-                    thickness=2)
-            img2draw = cv2.putText(
-                img2draw,
-                str(player_id),
-                (cv_bbox[0], cv_bbox[1]-3),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.7,
-                colors_list[player_id],
-                2
-                )
-            img2draw = cv2.circle(
-                img2draw,
-                (
-                (xywh2x1y1x2y2(player_bbox)[0]+int((xywh2x1y1x2y2(player_bbox)[2]-xywh2x1y1x2y2(player_bbox)[0])/2)),
-                (xywh2x1y1x2y2(player_bbox)[1]+int((xywh2x1y1x2y2(player_bbox)[3]-xywh2x1y1x2y2(player_bbox)[1])/2))
-                ),
-                2,
-                colors_list[player_id],
-                -1
-            )
-        
-    print(gt_objects.keys())
-    print(len(gt_objects.keys()))
-
-        ########## output save
-        # os.makedirs(outdir, exist_ok=True)
-        # img_out_path = os.path.join(outdir, os.path.basename(img_path))
-        # cv2.imwrite(img_out_path, img2draw)
-        # print('out written to', os.path.abspath(img_out_path))
-
 
 def frame_diff(dataset_path, diff_outdir):
     img_paths = load_img_paths(dataset_path)
