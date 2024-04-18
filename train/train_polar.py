@@ -57,8 +57,6 @@ for epoch in range(epochs):
     ### train
 
     for img_batch, label_batch in train_polar_snippets_dataloader:
-        debug(label_batch)
-        exit()
         out = model(img_batch)
         out_probabilities = model.softmax(out)
         loss = loss_fn(out, label_batch)

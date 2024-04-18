@@ -174,7 +174,6 @@ if __name__ == "__main__":
     is_debug = arguments.is_debug
 
     polar_dataset = Polar_dataset(dataset_path)
-    exit()
 
     polar_snippets_dataset = PolarSnippets(dataset_path, 228)
 
