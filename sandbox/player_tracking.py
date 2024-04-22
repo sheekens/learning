@@ -6,7 +6,7 @@ import cv2
 from typing import List, Dict
 from varname.helpers import debug
 from dataloader.dataloader_sportsMOT import load_gt, load_img_paths
-from tools.tools import xywh2x1y1x2y2
+from tools.tools_img import xywh2x1y1x2y2
 
 def run_dataset(dataset_path:str , outdir: str): 
     img_paths = load_img_paths(dataset_path)

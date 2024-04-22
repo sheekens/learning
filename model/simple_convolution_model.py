@@ -7,7 +7,7 @@ import torchvision
 import numpy as np
 import cv2
 from varname.helpers import debug
-from tools.tools import img_transform_to_tenzor
+from tools.tools_img import batch_from_path
 import random
 
 class Simple2DConv(nn.Module):
@@ -41,12 +41,10 @@ class Simple2DConv(nn.Module):
         self.softmax = nn.Softmax(1)
 
     def forward(self, x: Tensor): 
-        x = self.conv1.forward(x)
-        # debug(x.shape, prefix='conv1')
+        x = self.conv1(x)
         x = self.bn1.forward(x)
-        x = self.activation.forward(x)
+        x = self.activation(x)
         x = self.conv2.forward(x)
-        # debug(x.shape, prefix='conv2')
         x = self.bn2.forward(x)
         x = self.activation.forward(x)
         x = self.avg_pool(x)
@@ -57,11 +55,12 @@ class Simple2DConv(nn.Module):
 
 if __name__ == '__main__' :
     img_path = 'output\sportsMOT_volley_light_dataset\player_0\sportsMOT_volley_light_dataset_00_000001_x1_696_y1_442_x2_748_y2_565_square.jpg'
-
     img = cv2.imread(img_path)
+    debug(img.shape)
+    exit()
     img_tensor = torch.from_numpy(img)
     # #HWC to [CHW] our and to (0,1)
-    img_torch_tensor = img_transform_to_tenzor(img_tensor)
+    img_torch_tensor = batch_from_path(img_tensor)
     stupid_conv_model = Simple2DConv()
     out = stupid_conv_model.forward(img_torch_tensor)
     channels = (out.shape[1])

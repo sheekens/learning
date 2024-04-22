@@ -2,7 +2,7 @@ import os
 import numpy as np 
 import cv2
 from typing import List, Dict
-from tools.tools import xywh2x1y1x2y2
+from tools.tools_img import xywh2x1y1x2y2
 
 def load_gt(dataset_path: str): 
     gt_path = None
@@ -36,7 +36,7 @@ def load_img_paths(dataset_path: str) -> Dict[int, str]:
     return img_paths
 
 
-def run_dataset(dataset_path:str , outdir: str): 
+def run_dataset(dataset_path:str, outdir:str): 
     img_paths = load_img_paths(dataset_path)
     gt_objects = load_gt(dataset_path)
     colors_list = [
@@ -95,7 +95,10 @@ def run_dataset(dataset_path:str , outdir: str):
         img_out_path = os.path.join(outdir, os.path.basename(img_path))
         cv2.imwrite(img_out_path, img2draw)
         print('out written to', os.path.abspath(img_out_path))
+        # cv2.imshow('fff', img2draw)
+        # cv2.waitKey(-1)
+        # cv2.destroyAllWindows()
 
 if __name__ == '__main__' :
     outdir = 'output/output_sportsMOT_volley_starter_pack'
-    run_dataset('testdata/sportsMOT_volley_starter_pack/sportsMOT_volley_light_dataset', outdir)
+    run_dataset('/home/alex/Telegram Desktop/sportsMOT_volley_starter_pack.002/sportsMOT_volley_starter_pack.002/sportsMOT_volley_light_dataset', outdir)
