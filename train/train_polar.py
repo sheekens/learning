@@ -29,8 +29,8 @@ val_polar_snippets_dataloader = DataLoader(
 
 ### Model
 
-# model = Simple2DConv()
-model = ResnetModel(num_classes=9)
+model = Simple2DConv()
+# model = ResnetModel(num_classes=9)
 
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(
