@@ -162,4 +162,4 @@ cython_debug/
 # ML studying
 **/output
 **/datasets
-testdata/
+**/testdata
