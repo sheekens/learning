@@ -13,7 +13,7 @@ from model.resnet_model import ResnetModel
 
 # dataset_path = 'D:/testing/learning/testdata/POLAR_dataset_100' ##sheekens home
 # dataset_path = 'C:/testing/learning/testdata/POLAR_dataset_100' ##sheekens work
-dataset_path = '/home/alex/repositories/learning/testdata/POLAR_dataset_train_1000_val_200' ##sheekens home
+dataset_path = 'D:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens home
 # dataset_path = 'C:/testing/learning/datasets/POLAR_dataset_train_1000_val_200' ##sheekens work
 train_polar_snippets_dataset = PolarSnippets((dataset_path+'/train'), square_img_size=24)
 train_polar_snippets_dataloader = DataLoader(

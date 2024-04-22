@@ -12,7 +12,7 @@ class ResnetModel(nn.Module):
         self.num_classes = num_classes
         self.resnet = resnet18()
         self.classification_head = nn.Linear(
-            in_features=128,
+            in_features=1000,
             out_features=self.num_classes
             )
         self.softmax = nn.Softmax(1)
