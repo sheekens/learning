@@ -36,5 +36,5 @@ if __name__ == '__main__':
     
     # Run the model
     output = model(input_tensor)
-    output = model.forward(input_tensor)
     debug(output)
+    print(output)
